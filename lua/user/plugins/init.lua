@@ -74,8 +74,7 @@ return {
   {
     "f-person/git-blame.nvim",
     event = "BufRead",
-    config = function()
-    end,
+    commit = "e703ce8b30bad824cb2e149fb3b792ed59ce89f3"
   },
   { "vim-scripts/confirm-quit", lazy = false },
   {

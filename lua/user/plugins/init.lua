@@ -96,4 +96,5 @@ return {
     },
     ft = { "fugitive" }
   },
+  ["Darazaki/indent-o-matic"] = { disable = true },
 }

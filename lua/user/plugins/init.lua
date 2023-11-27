@@ -1,5 +1,33 @@
 return {
   {
+    "AstroNvim/astrocommunity",
+    { import = "astrocommunity.bars-and-lines.heirline-vscode-winbar" },
+    { import = "astrocommunity.pack.helm"},
+    { import = "astrocommunity.pack.go"},
+    { import = "astrocommunity.pack.rust"},
+    { import = "astrocommunity.pack.proto"},
+    { import = "astrocommunity.pack.terraform"},
+    { import = "astrocommunity.pack.typescript"},
+    { import = "astrocommunity.pack.json"},
+    { import = "astrocommunity.pack.yaml"},
+    { import = "astrocommunity.scrolling.neoscroll-nvim"},
+    { import = "astrocommunity.lsp.lsp-inlayhints-nvim"},
+    { import = "astrocommunity.completion.copilot-lua" },
+    { import = "astrocommunity.completion.copilot-lua-cmp" },
+    { import = "astrocommunity.git.octo-nvim" },
+    { import = "astrocommunity.git.git-blame-nvim" },
+    { import = "astrocommunity.git.neogit" },
+    { import = "astrocommunity.utility.neodim"},
+    { import = "astrocommunity.test.neotest"},
+    { import = "astrocommunity.terminal-integration.vim-tmux-yank" },
+    { import = "astrocommunity.test.nvim-coverage"},
+  },
+  {"ray-x/go.nvim",
+    config = function() require("go").setup({
+      lsp_inlay_hints = { enable = false}
+    }) end
+  },
+  {
     "karb94/neoscroll.nvim",
     opt = true,
     setup = function() table.insert(astronvim.file_plugins, "neoscroll.nvim") end,
@@ -27,74 +55,7 @@ return {
       return M
     end,
   },
-  {
-    "lvimuser/lsp-inlayhints.nvim",
-    module = "lsp-inlayhints",
-    config = function() require("lsp-inlayhints").setup() end,
-    opts = {},
-  },
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      })
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua" },
-    event = "InsertEnter",
-    config = function()
-      require("copilot_cmp").setup()
-    end
-  },
-  { "goolord/alpha-nvim",       enabled = false },
-  {
-    "leoluz/nvim-dap-go",
-    config = function()
-      require('dap-go').setup()
-    end
-  },
-  {
-    "pwntester/octo.nvim",
-    lazy = false,
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'kyazdani42/nvim-web-devicons',
-    },
-    config = function()
-      require("octo").setup()
-    end,
-  },
-  {
-    "f-person/git-blame.nvim",
-    event = "BufRead",
-    commit = "e703ce8b30bad824cb2e149fb3b792ed59ce89f3"
-  },
   { "vim-scripts/confirm-quit", lazy = false },
-  {
-    "tpope/vim-fugitive",
-    cmd = {
-      "G",
-      "Git",
-      "Gdiffsplit",
-      "Gread",
-      "Gwrite",
-      "Ggrep",
-      "GMove",
-      "GDelete",
-      "GBrowse",
-      "GRemove",
-      "GRename",
-      "Glgrep",
-      "Gedit"
-    },
-    ft = { "fugitive" }
-  },
-  ["Darazaki/indent-o-matic"] = { disable = true },
+  { "goolord/alpha-nvim", enabled = false },
+  { "Darazaki/indent-o-matic", enabled = false },
 }

@@ -19,6 +19,7 @@ return {
     { import = "astrocommunity.git.neogit" },
     { import = "astrocommunity.utility.neodim"},
     { import = "astrocommunity.test.neotest"},
+    { import = "astrocommunity.test.nvim-coverage"},
     { import = "astrocommunity.terminal-integration.vim-tmux-yank" },
     { import = "astrocommunity.test.nvim-coverage"},
   },

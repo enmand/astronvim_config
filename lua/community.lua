@@ -6,7 +6,10 @@
 return {
   "AstroNvim/astrocommunity",
   -- { import = "astrocommunity.pack.lua" },
-  -- { import = "astrocommunity.bars-and-lines.heirline-vscode-winbar" },
+  { import = "astrocommunity.recipes.heirline-vscode-winbar" },
+  { import = "astrocommunity.recipes.heirline-clock-statusline" },
+  { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
+  { import = "astrocommunity.recipes.neovide" },
   { import = "astrocommunity.pack.helm" },
   { import = "astrocommunity.pack.go" },
   { import = "astrocommunity.pack.rust" },

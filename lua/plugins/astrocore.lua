@@ -26,12 +26,12 @@ return {
     options = {
       opt = { -- vim.opt.<key>
         relativenumber = false, -- sets vim.opt.relativenumber
-        -- tabstop = 4,
-        -- shiftwidth = 4,
-        -- softtabstop = 4,
-        -- expandtab = true,
-        -- autoindent = true,
-        -- smartindent = true,
+        tabstop = 4,
+        shiftwidth = 4,
+        softtabstop = 4,
+        expandtab = true,
+        autoindent = true,
+        smartindent = true,
         number = true, -- sets vim.opt.number
         spell = false, -- sets vim.opt.spell
         signcolumn = "auto", -- sets vim.opt.signcolumn to auto
@@ -46,7 +46,21 @@ return {
     -- Mappings can be configured through AstroCore as well.
     -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
     mappings = {
+      v = {
+        -- ["<D-v>"] = { '"+P' }, -- Paste visual mode
+      },
+      c = {
+        -- ["<D-v>"] = { "<C-R>+" }, -- Paste command mode
+      },
+      i = {
+        -- ["<D-s>"] = { "<Esc>:w<CR>" },
+        -- ["<D-v>"] = { "<C-R>+" }, -- Paste insert mode
+      },
       n = {
+        -- ["<D-s>"] = { ":w<CR>" },
+        -- ["<D-c>"] = { '"+y' },
+        -- ["<D-v>"] = { '"+P' }, -- Paste normal mode
+
         -- second key is the lefthand side of the map
         -- Tab Mappings
         ["<Leader>Tn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
@@ -71,9 +85,6 @@ return {
         ["<Leader>Opl"] = { "<cmd>Octo pr list<CR>", desc = "List PRs" },
         ["<Leader>OpC"] = { "<cmd>Octo pr create<CR>", desc = "Create new PR" },
         ["<Leader>Ooc"] = { "<cmd>Octo pr comment<CR>", desc = "Comment on PR" },
-      },
-      t = {
-        -- setting a mapping to false will disable it
       },
     },
   },

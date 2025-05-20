@@ -13,6 +13,7 @@ return {
 	{ import = "astrocommunity.pack.helm" },
 	{ import = "astrocommunity.pack.go" },
 	{ import = "astrocommunity.pack.rust" },
+	{ import = "astrocommunity.pack.python" },
 	{ import = "astrocommunity.pack.proto" },
 	{ import = "astrocommunity.pack.terraform" },
 	{ import = "astrocommunity.pack.typescript" },

@@ -18,7 +18,8 @@ return {
 		opts = {
 			lang = {
 				rust = {
-					coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+					coverage_command =
+					"grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
 					project_files_only = true,
 					project_files = { "crates/*", "src/*", "tests/*" },
 				},
@@ -84,17 +85,17 @@ return {
 			npairs.add_rules(
 				{
 					Rule("$", "$", { "tex", "latex" })
-						-- don't add a pair if the next character is %
+					-- don't add a pair if the next character is %
 						:with_pair(cond.not_after_regex("%%"))
-						-- don't add a pair if  the previous character is xxx
+					-- don't add a pair if  the previous character is xxx
 						:with_pair(
 							cond.not_before_regex("xxx", 3)
 						)
-						-- don't move right when repeat character
+					-- don't move right when repeat character
 						:with_move(cond.none())
-						-- don't delete if the next character is xx
+					-- don't delete if the next character is xx
 						:with_del(cond.not_after_regex("xx"))
-						-- disable adding a newline when you press <cr>
+					-- disable adding a newline when you press <cr>
 						:with_cr(cond.none()),
 				},
 				-- disable for .vim files, but it work for another filetypes
@@ -143,9 +144,54 @@ return {
 		end,
 	},
 	{
+		"nvim-neotest/neotest",
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-go")({
+						-- concat require('astrocore').plugin_opts("neotest-go") to neotest-go options
+						require("astrocore").plugin_opts("neotest-go"),
+						experimental = {
+							test_table = true,
+						},
+						args = {
+							"-test.v -timeout=30s -count=1 -coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+						},
+					}),
+				},
+			})
+		end,
+	},
+	{
+		"andythigpen/nvim-coverage",
+		config = function()
+			require("coverage").setup({
+				auto_reload = true,
+				lang = {
+					go = {
+						coverage_file = vim.fn.getcwd() .. "/coverage.out",
+					},
+				},
+			})
+		end,
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+		},
+	},
+	{
+		"yetone/avante.nvim",
+		opts = {
+			rag_service = {
+				enabled = true,                -- Enables the RAG service
+				host_mount = os.getenv("HOME") .. "/Code", -- Host mount path for the rag service
+				provider = "openai",           -- The provider to use for RAG service (e.g. openai or ollama)
+				llm_model = "",                -- The LLM model to use for RAG service
+				embed_model = "",              -- The embedding model to use for RAG service
+				endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
+			},
 		},
 	},
 	{

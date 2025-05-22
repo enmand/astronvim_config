@@ -11,7 +11,7 @@ return {
 	{ import = "astrocommunity.recipes.heirline-mode-text-statusline" },
 	{ import = "astrocommunity.recipes.neovide" },
 	{ import = "astrocommunity.pack.helm" },
-	{ import = "astrocommunity.pack.go" },
+	{ import = "astrocommunity.pack.golangci-lint" },
 	{ import = "astrocommunity.pack.rust" },
 	{ import = "astrocommunity.pack.python" },
 	{ import = "astrocommunity.pack.proto" },

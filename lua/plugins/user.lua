@@ -18,8 +18,7 @@ return {
 		opts = {
 			lang = {
 				rust = {
-					coverage_command =
-					"grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+					coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
 					project_files_only = true,
 					project_files = { "crates/*", "src/*", "tests/*" },
 				},
@@ -85,17 +84,17 @@ return {
 			npairs.add_rules(
 				{
 					Rule("$", "$", { "tex", "latex" })
-					-- don't add a pair if the next character is %
+						-- don't add a pair if the next character is %
 						:with_pair(cond.not_after_regex("%%"))
-					-- don't add a pair if  the previous character is xxx
+						-- don't add a pair if  the previous character is xxx
 						:with_pair(
 							cond.not_before_regex("xxx", 3)
 						)
-					-- don't move right when repeat character
+						-- don't move right when repeat character
 						:with_move(cond.none())
-					-- don't delete if the next character is xx
+						-- don't delete if the next character is xx
 						:with_del(cond.not_after_regex("xx"))
-					-- disable adding a newline when you press <cr>
+						-- disable adding a newline when you press <cr>
 						:with_cr(cond.none()),
 				},
 				-- disable for .vim files, but it work for another filetypes
@@ -196,238 +195,14 @@ return {
 		commit = "87c4c6b4937d1884960759aba4a0e42645688f2f",
 		opts = {
 			rag_service = {
-				enabled = true,                -- Enables the RAG service
+				enabled = true, -- Enables the RAG service
 				host_mount = os.getenv("HOME") .. "/Code", -- Host mount path for the rag service
-				provider = "openai",           -- The provider to use for RAG service (e.g. openai or ollama)
-				llm_model = "",                -- The LLM model to use for RAG service
-				embed_model = "",              -- The embedding model to use for RAG service
+				provider = "openai", -- The provider to use for RAG service (e.g. openai or ollama)
+				llm_model = "", -- The LLM model to use for RAG service
+				embed_model = "", -- The embedding model to use for RAG service
 				endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
 			},
 		},
-	},
-	{
-		"frankroeder/parrot.nvim",
-		tag = "v0.3.7",
-		dependencies = { "ibhagwan/fzf-lua", "nvim-lua/plenary.nvim" },
-		-- optionally include "rcarriga/nvim-notify" for beautiful notifications
-		config = function()
-			require("parrot").setup({
-				-- Providers must be explicitly added to make them available.
-				providers = {
-					openai = {
-						api_key = { "/usr/bin/security", "find-generic-password", "-s oapi-key-nvim", "-w" },
-					},
-				},
-				hooks = {
-					Complete = function(prt, params)
-						local template = [[
-        I have the following code from {{filename}}:
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Please finish the code above carefully and logically.
-        Respond just with the snippet of code that should be inserted."
-        ]]
-						local agent = prt.get_command_agent()
-						prt.Prompt(
-							params,
-							prt.ui.Target.append,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					CompleteFullContext = function(prt, params)
-						local template = [[
-        I have the following code from {{filename}} and other realted files:
-
-				```{{filetype}}
-				{{multifilecontent}}
-				```
-
-				Please look at the following section specifically:
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Please finish the code above carefully and logically.
-        Respond just with the snippet of code that should be inserted."
-        ]]
-						local agent = prt.get_command_agent()
-						prt.Prompt(
-							params,
-							prt.ui.Target.append,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					Explain = function(prt, params)
-						local template = [[
-        Your task is to take the code snippet from {{filename}} and explain it with gradually increasing complexity.
-        Break down the code's functionality, purpose, and key components.
-        The goal is to help the reader understand what the code does and how it works.
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Use the markdown format with codeblocks and inline code.
-        Explanation of the code above:
-        ]]
-						local agent = prt.get_chat_agent()
-						prt.logger.info("Explaining selection with agent: " .. agent.name)
-						prt.Prompt(
-							params,
-							prt.ui.Target.new,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					FixBugs = function(prt, params)
-						local template = [[
-        You are an expert in {{filetype}}.
-        Fix bugs in the below code from {{filename}} carefully and logically:
-        Your task is to analyze the provided {{filetype}} code snippet, identify
-        any bugs or errors present, and provide a corrected version of the code
-        that resolves these issues. Explain the problems you found in the
-        original code and how your fixes address them. The corrected code should
-        be functional, efficient, and adhere to best practices in
-        {{filetype}} programming.
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Fixed code:
-        ]]
-						local agent = prt.get_command_agent()
-						prt.logger.info("Fixing bugs in selection with agent: " .. agent.name)
-						prt.Prompt(
-							params,
-							prt.ui.Target.new,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					Optimize = function(prt, params)
-						local template = [[
-        You are an expert in {{filetype}}.
-        Your task is to analyze the provided {{filetype}} code snippet and
-        suggest improvements to optimize its performance. Identify areas
-        where the code can be made more efficient, faster, or less
-        resource-intensive. Provide specific suggestions for optimization,
-        along with explanations of how these changes can enhance the code's
-        performance. The optimized code should maintain the same functionality
-        as the original code while demonstrating improved efficiency.
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Optimized code:
-        ]]
-						local agent = prt.get_command_agent()
-						prt.logger.info("Optimizing selection with agent: " .. agent.name)
-						prt.Prompt(
-							params,
-							prt.ui.Target.new,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					UnitTests = function(prt, params)
-						local template = [[
-        I have the following code from {{filename}}:
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-
-        Please respond by writing table driven unit tests for the code above.
-        ]]
-						local agent = prt.get_command_agent()
-						prt.logger.info("Creating unit tests for selection with agent: " .. agent.name)
-						prt.Prompt(
-							params,
-							prt.ui.Target.enew,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					Debug = function(prt, params)
-						local template = [[
-        I want you to act as {{filetype}} expert.
-        Review the following code, carefully examine it, and report potential
-        bugs and edge cases alongside solutions to resolve them.
-        Keep your explanation short and to the point:
-
-        ```{{filetype}}
-        {{selection}}
-        ```
-        ]]
-						local agent = prt.get_chat_agent()
-						prt.logger.info("Debugging selection with agent: " .. agent.name)
-						prt.Prompt(
-							params,
-							prt.ui.Target.enew,
-							nil,
-							agent.model,
-							template,
-							agent.system_prompt,
-							agent.provider
-						)
-					end,
-					CommitMsg = function(prt, params)
-						local futils = require("parrot.file_utils")
-						if futils.find_git_root() == "" then
-							prt.logger.warning("Not in a git repository")
-							return
-						else
-							local template = [[
-					I want you to act as a commit message generator. I will provide you
-					with information about the task and the prefix for the task code, and
-					I would like you to generate an appropriate commit message using the
-					conventional commit format. Do not write any explanations or other
-					words, just reply with the commit message.
-					Start with a short headline as summary but then list the individual
-					changes in more detail.
-
-					Here are the changes that should be considered by this message:
-					]] .. vim.fn.system("git diff --no-color --no-ext-diff --staged")
-							local agent = prt.get_command_agent()
-							prt.Prompt(
-								params,
-								prt.ui.Target.append,
-								nil,
-								agent.model,
-								template,
-								agent.system_prompt,
-								agent.provider
-							)
-						end
-					end,
-				},
-			})
-		end,
 	},
 	{
 		"akinsho/toggleterm.nvim",

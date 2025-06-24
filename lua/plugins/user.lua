@@ -18,7 +18,8 @@ return {
 		opts = {
 			lang = {
 				rust = {
-					coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+					coverage_command =
+					"grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
 					project_files_only = true,
 					project_files = { "crates/*", "src/*", "tests/*" },
 				},
@@ -84,17 +85,17 @@ return {
 			npairs.add_rules(
 				{
 					Rule("$", "$", { "tex", "latex" })
-						-- don't add a pair if the next character is %
+					-- don't add a pair if the next character is %
 						:with_pair(cond.not_after_regex("%%"))
-						-- don't add a pair if  the previous character is xxx
+					-- don't add a pair if  the previous character is xxx
 						:with_pair(
 							cond.not_before_regex("xxx", 3)
 						)
-						-- don't move right when repeat character
+					-- don't move right when repeat character
 						:with_move(cond.none())
-						-- don't delete if the next character is xx
+					-- don't delete if the next character is xx
 						:with_del(cond.not_after_regex("xx"))
-						-- disable adding a newline when you press <cr>
+					-- disable adding a newline when you press <cr>
 						:with_cr(cond.none()),
 				},
 				-- disable for .vim files, but it work for another filetypes
@@ -102,14 +103,6 @@ return {
 			)
 		end,
 	},
-	-- {
-	-- "ray-x/go.nvim",
-	-- config = function()
-	-- require("go").setup {
-	-- lsp_inlay_hints = { enable = false },
-	-- }
-	-- end,
-	-- },
 	{
 		"karb94/neoscroll.nvim",
 		opt = true,
@@ -145,30 +138,38 @@ return {
 	{
 		"nvim-neotest/neotest",
 		config = function()
-			local neotest_ns = vim.api.nvim_create_namespace("neotest")
-			vim.diagnostic.config({
-				virtual_text = {
-					format = function(diagnostic)
-						local message =
-							diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-						return message
-					end,
+			local neotest_golang_opts = { -- Specify configuration
+				runner = "go",
+				go_test_args = {
+					"-v",
+					"-race",
+					"-count=1",
+					"-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
 				},
-			}, neotest_ns)
+			}
 			require("neotest").setup({
 				adapters = {
-					require("neotest-go")({
-						-- concat require('astrocore').plugin_opts("neotest-go") to neotest-go options
-						require("astrocore").plugin_opts("neotest-go"),
-						experimental = {
-							test_table = true,
-						},
-						args = {
-							"-test.v -timeout=30s -count=1 -coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
-						},
-					}),
+					require("neotest-golang")(neotest_golang_opts), -- Registration
 				},
 			})
+		end,
+	},
+	{
+		"jay-babu/mason-null-ls.nvim",
+		optional = true,
+		opts = function(_, opts)
+			opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "sqlfluff" })
+			opts.handlers = opts.handlers or {}
+
+			opts.handlers.sqlfluff = function()
+				local null_ls = require("null-ls")
+				null_ls.register(null_ls.builtins.diagnostics.sqlfluff.with({
+					extra_args = { "--dialect", "postgres" },
+				}))
+				null_ls.register(null_ls.builtins.formatting.sqlfluff.with({
+					extra_args = { "--dialect", "postgresql" },
+				}))
+			end
 		end,
 	},
 	{
@@ -195,14 +196,24 @@ return {
 		commit = "87c4c6b4937d1884960759aba4a0e42645688f2f",
 		opts = {
 			rag_service = {
-				enabled = true, -- Enables the RAG service
+				enabled = true,                -- Enables the RAG service
 				host_mount = os.getenv("HOME") .. "/Code", -- Host mount path for the rag service
-				provider = "openai", -- The provider to use for RAG service (e.g. openai or ollama)
-				llm_model = "", -- The LLM model to use for RAG service
-				embed_model = "", -- The embedding model to use for RAG service
+				provider = "openai",           -- The provider to use for RAG service (e.g. openai or ollama)
+				llm_model = "",                -- The LLM model to use for RAG service
+				embed_model = "",              -- The embedding model to use for RAG service
 				endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
 			},
 		},
+	},
+	{
+		"ravitemer/mcphub.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
+		config = function()
+			require("mcphub").setup()
+		end,
 	},
 	{
 		"akinsho/toggleterm.nvim",
@@ -213,56 +224,4 @@ return {
 	{
 		"cappyzawa/starlark.vim",
 	},
-	-- {"hrsh7th/nvim-cmp",
-	--   dependencies = {
-	--     "hrsh7th/cmp-calc",
-	--     "hrsh7th/cmp-emoji",
-	--     "kdheepak/cmp-latex-symbols",
-	--   },
-	--   opts = function(_, opts)
-	--     local cmp = require "cmp"
-	--
-	--     local function next_item()
-	--       if cmp.visible() then
-	--         cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
-	--       else
-	--         cmp.complete()
-	--       end
-	--     end
-	--
-	--     local has_words_before = function()
-	--       if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-	--       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-	--       return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-	--     end
-	--
-	--     return require("astronvim.utils").extend_tbl(opts, {
-	--       sources = cmp.config.sources {
-	--         { name = "nvim_lsp",      priority = 1000 },
-	--         { name = "copilot",       priority = 900 },
-	--         { name = "luasnip",       priority = 750 },
-	--         { name = "latex_symbols", priority = 700 },
-	--         { name = "emoji",         priority = 700 },
-	--         { name = "calc",          priority = 650 },
-	--         { name = "path",          priority = 500 },
-	--         { name = "buffer",        priority = 250 },
-	--       },
-	--       mapping = {
-	--         ["<C-n>"] = next_item,
-	--         ["<C-j>"] = next_item,
-	--         ["<Tab>"] = vim.schedule_wrap(function(fallback)
-	--           if cmp.visible() and has_words_before() then
-	--             cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
-	--           else
-	--             fallback()
-	--           end
-	--         end),
-	--         ["<CR>"] = cmp.mapping.confirm({
-	--           select = true,
-	--           behavior = cmp.ConfirmBehavior.Replace,
-	--         }),
-	--       },
-	--     })
-	--   end,
-	-- },
 }

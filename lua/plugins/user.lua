@@ -193,7 +193,6 @@ return {
 	},
 	{
 		"yetone/avante.nvim",
-		commit = "87c4c6b4937d1884960759aba4a0e42645688f2f",
 		opts = {
 			rag_service = {
 				enabled = true,                -- Enables the RAG service

@@ -20,7 +20,7 @@ return {
   { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.pack.json" },
   { import = "astrocommunity.pack.yaml" },
-  { import = "astrocommunity.pack.cs" },
+  -- { import = "astrocommunity.pack.cs" },
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
   { import = "astrocommunity.recipes.vscode" },

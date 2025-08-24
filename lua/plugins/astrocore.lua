@@ -38,11 +38,17 @@ return {
     -- vim options can be configured here
     options = {
       opt = { -- vim.opt.<key>
-        relativenumber = true, -- sets vim.opt.relativenumber
+        relativenumber = false, -- sets vim.opt.relativenumber
         number = true, -- sets vim.opt.number
-        spell = false, -- sets vim.opt.spell
+        spell = true, -- sets vim.opt.spell
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
         wrap = false, -- sets vim.opt.wrap
+        tabstop = 4,
+        shiftwidth = 4,
+        softtabstop = 4,
+        expandtab = true,
+        autoindent = true,
+        smartindent = true,
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
@@ -56,6 +62,10 @@ return {
       -- first key is the mode
       n = {
         -- second key is the lefthand side of the map
+        ["<Leader>T"] = { name = "Tab" },
+        ["<Leader>Tn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
+        ["<Leader>Tx"] = { "<cmd>tabclose<cr>", desc = "Close tab" },
+        ["<C-x>"] = { "<cmd>bd<CR>" },
 
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },

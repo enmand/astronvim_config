@@ -98,19 +98,6 @@ return {
     end,
   },
   {
-    "yetone/avante.nvim",
-    opts = {
-      rag_service = {
-        enabled = true, -- Enables the RAG service
-        host_mount = os.getenv "HOME" .. "/Code", -- Host mount path for the rag service
-        provider = "openai", -- The provider to use for RAG service (e.g. openai or ollama)
-        llm_model = "", -- The LLM model to use for RAG service
-        embed_model = "", -- The embedding model to use for RAG service
-        endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
-      },
-    },
-  },
-  {
     "akinsho/toggleterm.nvim",
     opts = {
       direction = "float",
@@ -118,5 +105,17 @@ return {
   },
   {
     "cappyzawa/starlark.vim",
+  },
+  {
+    "olimorris/codecompanion.nvim",
+    config = function()
+      require("codecompanion").setup {
+        adapters = {
+          acp = {
+            claude_code = function() return require("codecompanion.adapters").extend("claude_code", {}) end,
+          },
+        },
+      }
+    end,
   },
 }

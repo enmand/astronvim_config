@@ -37,5 +37,6 @@ return {
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   { import = "astrocommunity.recipes.neovide" },
   { import = "astrocommunity.pack.lua" },
+  { import = "astrocommunity.bars-and-lines.bufferline-nvim" },
   -- import/override with your plugins folder
 }

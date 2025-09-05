@@ -19,6 +19,7 @@ return {
     },
     -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
     diagnostics = {
+      update_in_insert = true,
       virtual_text = true,
       underline = true,
     },
@@ -65,6 +66,9 @@ return {
         ["<Leader>T"] = { name = "Tab" },
         ["<Leader>Tn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
         ["<Leader>Tx"] = { "<cmd>tabclose<cr>", desc = "Close tab" },
+
+        ["<D-t>"] = { "<cmd>tabnew<cr>", desc = "New tab" },
+        ["<D-w>"] = { "<cmd>tabclose<cr>", desc = "Close tab" },
         ["<C-x>"] = { "<cmd>bd<CR>" },
 
         -- navigate buffer tabs
@@ -82,12 +86,30 @@ return {
         },
 
         -- Custom keybindings
-        ["<S-D-e>"] = { function() require("neo-tree.command").execute({ toggle = true }) end, desc = "Toggle Neo-tree" },
-        ["<C-n>"] = { function() require("neo-tree.command").execute({ toggle = true }) end, desc = "Toggle Neo-tree" },
+        ["<S-D-e>"] = {
+          function() require("neo-tree.command").execute { toggle = true } end,
+          desc = "Toggle Neo-tree",
+        },
+        ["<C-n>"] = { function() require("neo-tree.command").execute { toggle = true } end, desc = "Toggle Neo-tree" },
         ["<C-p>"] = { function() require("snacks.picker").files() end, desc = "Find files" },
         ["<C-a>"] = { function() require("snacks.picker").grep() end, desc = "Find words" },
-        ["<C-x>"] = { "<cmd>bd<CR>" },
         ["<D-j>"] = { function() require("toggleterm").toggle() end, desc = "Toggle terminal" },
+
+        -- Toggle bufferline mode between tabs and buffers
+        ["<Leader>bt"] = {
+          function()
+            local bl = require "bufferline"
+            local current_mode = require("bufferline.config").options.mode
+            local new_mode = current_mode == "tabs" and "buffers" or "tabs"
+
+            bl.setup {
+              options = vim.tbl_extend("force", require("bufferline.config").options, { mode = new_mode }),
+            }
+
+            print("Bufferline mode: " .. new_mode)
+          end,
+          desc = "Toggle bufferline tabs/buffers mode",
+        },
 
         -- tables with just a `desc` key will be registered with which-key if it's installed
         -- this is useful for naming menus

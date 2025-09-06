@@ -29,7 +29,6 @@ return {
   { import = "astrocommunity.test.neotest" },
   { import = "astrocommunity.test.nvim-coverage" },
   { import = "astrocommunity.terminal-integration.vim-tmux-yank" },
-  { import = "astrocommunity.test.nvim-coverage" },
   { import = "astrocommunity.editing-support.ultimate-autopair-nvim" },
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
   { import = "astrocommunity.editing-support.mcphub-nvim" },

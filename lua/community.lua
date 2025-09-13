@@ -32,10 +32,10 @@ return {
   { import = "astrocommunity.editing-support.ultimate-autopair-nvim" },
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
   { import = "astrocommunity.editing-support.mcphub-nvim" },
-  { import = "astrocommunity.editing-support.codecompanion-nvim" },
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   { import = "astrocommunity.recipes.neovide" },
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.bars-and-lines.bufferline-nvim" },
+  { import = "astrocommunity.pack.full-dadbod" },
   -- import/override with your plugins folder
 }

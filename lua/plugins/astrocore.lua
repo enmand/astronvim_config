@@ -69,6 +69,8 @@ return {
 
         ["<D-t>"] = { "<cmd>tabnew<cr>", desc = "New tab" },
         ["<D-w>"] = { "<cmd>tabclose<cr>", desc = "Close tab" },
+        ["<D-]>"] = { "<cmd>tabnext<cr>", desc = "Next tab" },
+        ["<D-[>"] = { "<cmd>tabprevious<cr>", desc = "Previous tab" },
         ["<C-x>"] = { "<cmd>bd<CR>" },
 
         -- navigate buffer tabs

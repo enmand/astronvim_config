@@ -46,6 +46,9 @@ return {
     "andythigpen/nvim-coverage",
     opts = {
       lang = {
+        go = {
+          coverage_file = "coverage.out",
+        },
         rust = {
           coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
           project_files_only = true,
@@ -55,21 +58,37 @@ return {
     },
   },
 
-  -- Configure neotest-golang to generate coverage when running tests
-  -- The opts are passed via astrocore.plugin_opts when the adapter is registered
+  -- Configure neotest-golang with coverage options
+  -- We override how pack.go registers the adapter to include coverage args
   {
-    "fredrikaverpil/neotest-golang",
-    lazy = true,
-    opts = {
-      go_test_args = function()
-        return {
-          "-v",
-          "-race",
-          "-count=1",
-          "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
-        }
-      end,
-    },
+    "nvim-neotest/neotest",
+    dependencies = { "fredrikaverpil/neotest-golang" },
+    opts = function(_, opts)
+      -- Clear any existing neotest-golang adapters added by pack.go
+      if opts.adapters then
+        local new_adapters = {}
+        for _, adapter in ipairs(opts.adapters) do
+          if type(adapter) ~= "table" or adapter.name ~= "neotest-golang" then
+            table.insert(new_adapters, adapter)
+          end
+        end
+        opts.adapters = new_adapters
+      else
+        opts.adapters = {}
+      end
+      -- Add neotest-golang with our coverage options
+      -- Use a function so cwd is evaluated at runtime
+      table.insert(opts.adapters, require("neotest-golang")({
+        go_test_args = function()
+          return {
+            "-v",
+            "-race",
+            "-count=1",
+            "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+          }
+        end,
+      }))
+    end,
   },
 
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call

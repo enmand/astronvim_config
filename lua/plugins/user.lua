@@ -82,6 +82,23 @@ return {
     end,
   },
 
+  -- Configure neotest-golang to generate coverage when running tests
+  -- The opts are passed via astrocore.plugin_opts when the adapter is registered
+  {
+    "fredrikaverpil/neotest-golang",
+    lazy = true,
+    opts = {
+      go_test_args = function()
+        return {
+          "-v",
+          "-race",
+          "-count=1",
+          "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+        }
+      end,
+    },
+  },
+
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
     "L3MON4D3/LuaSnip",

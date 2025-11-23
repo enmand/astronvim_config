@@ -1,27 +1,12 @@
 ---@type LazySpec
 return {
-  -- nvim-treesitter main branch required for neotest-golang
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
     version = false,
-    commit = false,
+    commit = false, -- Override AstroNvim's lazy_snapshot pinning
     build = ":TSUpdate",
   },
-  -- nvim-treesitter-textobjects main branch for treesitter main compatibility
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "main",
-    version = false,
-    commit = false,
-  },
-
-  -- AstroNvim v6 compatibility
-  { "AstroNvim/astrocore", version = false, branch = "v3" },
-  { "AstroNvim/astrolsp", version = false, branch = "v4" },
-  { "AstroNvim/astroui", version = false, branch = "v4" },
-  -- mason-lspconfig v2 required for AstroNvim v6
-  { "williamboman/mason-lspconfig.nvim", version = false, commit = false },
 
   "andweeb/presence.nvim",
   {
@@ -62,24 +47,17 @@ return {
     config = function() require("lsp_signature").setup() end,
   },
 
-  -- Consolidated nvim-coverage config
   {
     "andythigpen/nvim-coverage",
-    config = function()
-      require("coverage").setup {
-        auto_reload = true,
-        lang = {
-          go = {
-            coverage_file = vim.fn.getcwd() .. "/coverage.out",
-          },
-          rust = {
-            coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
-            project_files_only = true,
-            project_files = { "crates/*", "src/*", "tests/*" },
-          },
+    opts = {
+      lang = {
+        rust = {
+          coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+          project_files_only = true,
+          project_files = { "crates/*", "src/*", "tests/*" },
         },
-      }
-    end,
+      },
+    },
   },
 
   -- Configure neotest-golang to generate coverage when running tests
@@ -107,6 +85,19 @@ return {
       -- add more custom luasnip configuration such as filetype extend or custom snippets
       local luasnip = require "luasnip"
       luasnip.filetype_extend("javascript", { "javascriptreact" })
+    end,
+  },
+  {
+    "andythigpen/nvim-coverage",
+    config = function()
+      require("coverage").setup {
+        auto_reload = true,
+        lang = {
+          go = {
+            coverage_file = vim.fn.getcwd() .. "/coverage.out",
+          },
+        },
+      }
     end,
   },
   {

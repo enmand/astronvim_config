@@ -12,4 +12,6 @@ return {
       -- add more arguments for adding more treesitter parsers
     },
   },
+  branch = "main",
+  version = false,
 }

@@ -1,12 +1,7 @@
 ---@type LazySpec
 return {
-  {
-    "nvim-treesitter/nvim-treesitter",
-    branch = "main",
-    version = false,
-    commit = false, -- Override AstroNvim's lazy_snapshot pinning
-    build = ":TSUpdate",
-  },
+
+  -- == Examples of Adding Plugins ==
 
   "andweeb/presence.nvim",
   {

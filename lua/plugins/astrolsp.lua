@@ -39,11 +39,15 @@ return {
     -- enable servers that you already have installed without mason
     servers = {
       "tilt_ls",
+      "omnisharp",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
     config = {
       -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      omnisharp = {
+        cmd = { "omnisharp" },
+      },
     },
     -- customize how language servers are attached
     handlers = {

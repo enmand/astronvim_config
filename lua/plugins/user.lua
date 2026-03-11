@@ -3,14 +3,7 @@ return {
 
   -- == Examples of Adding Plugins ==
 
-  "andweeb/presence.nvim",
-  {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function() require("lsp_signature").setup() end,
-  },
-
-  -- == Examples of Overriding Plugins ==
+  { "ray-x/lsp_signature.nvim", enabled = false },
 
   -- customize dashboard options
   {
@@ -37,25 +30,22 @@ return {
   },
 
   {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function() require("lsp_signature").setup() end,
-  },
-
-  {
     "andythigpen/nvim-coverage",
-    opts = {
-      lang = {
-        go = {
-          coverage_file = "coverage.out",
+    config = function()
+      require("coverage").setup {
+        auto_reload = true,
+        lang = {
+          go = {
+            coverage_file = vim.fn.getcwd() .. "/coverage.out",
+          },
+          rust = {
+            coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+            project_files_only = true,
+            project_files = { "crates/*", "src/*", "tests/*" },
+          },
         },
-        rust = {
-          coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
-          project_files_only = true,
-          project_files = { "crates/*", "src/*", "tests/*" },
-        },
-      },
-    },
+      }
+    end,
   },
 
   -- Configure neotest-golang with coverage options
@@ -102,19 +92,6 @@ return {
     end,
   },
   {
-    "andythigpen/nvim-coverage",
-    config = function()
-      require("coverage").setup {
-        auto_reload = true,
-        lang = {
-          go = {
-            coverage_file = vim.fn.getcwd() .. "/coverage.out",
-          },
-        },
-      }
-    end,
-  },
-  {
     "akinsho/toggleterm.nvim",
     opts = {
       direction = "float",
@@ -127,12 +104,7 @@ return {
     "yetone/avante.nvim",
     opts = {
       rag_service = {
-        enabled = true, -- Enables the RAG service
-        host_mount = os.getenv "HOME" .. "/Code", -- Host mount path for the rag service
-        provider = "openai", -- The provider to use for RAG service (e.g. openai or ollama)
-        llm_model = "", -- The LLM model to use for RAG service
-        embed_model = "", -- The embedding model to use for RAG service
-        endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
+        enabled = false,
       },
       provider = "claude-code",
       acp_providers = {
@@ -143,7 +115,7 @@ return {
             NODE_NO_WARNINGS = "1",
             CLAUDE_CODE_OAUTH_TOKEN = os.getenv "CLAUDE_CODE_OAUTH_TOKEN",
             ANTHROPIC_API_KEY = os.getenv "ANTHROPIC_API_KEY",
-            ACP_PERMISSION_MODE = "bypassPermissions",
+            ACP_PERMISSION_MODE = "default",
           },
         },
       },

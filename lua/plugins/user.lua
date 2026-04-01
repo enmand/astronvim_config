@@ -122,6 +122,19 @@ return {
     },
   },
   {
+    "3rd/diagram.nvim",
+    dependencies = { "3rd/image.nvim" },
+    ft = { "markdown", "mermaid" },
+    opts = {
+      renderer_options = {
+        mermaid = {
+          background = "transparent",
+          theme = "dark",
+        },
+      },
+    },
+  },
+  {
     "akinsho/bufferline.nvim",
     opts = {
       options = {

@@ -1,8 +1,6 @@
 ---@type LazySpec
 return {
 
-  -- == Examples of Adding Plugins ==
-
   { "ray-x/lsp_signature.nvim", enabled = false },
 
   -- customize dashboard options
@@ -18,11 +16,11 @@ return {
             "██   ██      ██    ██    ██   ██ ██    ██",
             "██   ██ ███████    ██    ██   ██  ██████ ",
             "",
-            "███    ██ ██    ██ ██ ███    ███",
-            "████   ██ ██    ██ ██ ████  ████",
-            "██ ██  ██ ██    ██ ██ ██ ████ ██",
-            "██  ██ ██  ██  ██  ██ ██  ██  ██",
-            "██   ████   ████   ██ ██      ██",
+            "███    ██ ██    ██ ██ ███    ███",
+            "████   ██ ██    ██ ██ ████  ████",
+            "██ ██  ██ ██    ██ ██ ██ ████ ██",
+            "██  ██ ██  ██  ██  ██ ██  ██  ██",
+            "██   ████   ████   ██ ██      ██",
           }, "\n"),
         },
       },
@@ -49,12 +47,10 @@ return {
   },
 
   -- Configure neotest-golang with coverage options
-  -- We override how pack.go registers the adapter to include coverage args
   {
     "nvim-neotest/neotest",
     dependencies = { "fredrikaverpil/neotest-golang" },
     opts = function(_, opts)
-      -- Clear any existing neotest-golang adapters added by pack.go
       if opts.adapters then
         local new_adapters = {}
         for _, adapter in ipairs(opts.adapters) do
@@ -66,8 +62,6 @@ return {
       else
         opts.adapters = {}
       end
-      -- Add neotest-golang with our coverage options
-      -- Use a function so cwd is evaluated at runtime
       table.insert(opts.adapters, require("neotest-golang")({
         go_test_args = function()
           return {
@@ -81,14 +75,12 @@ return {
     end,
   },
 
-  -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
     "L3MON4D3/LuaSnip",
     config = function(plugin, opts)
-      require "astronvim.plugins.configs.luasnip"(plugin, opts) -- include the default astronvim config that calls the setup call
-      -- add more custom luasnip configuration such as filetype extend or custom snippets
       local luasnip = require "luasnip"
       luasnip.filetype_extend("javascript", { "javascriptreact" })
+      require "astronvim.plugins.configs.luasnip"(plugin, opts)
     end,
   },
   {
@@ -122,14 +114,34 @@ return {
     },
   },
   {
-    "3rd/diagram.nvim",
-    dependencies = { "3rd/image.nvim" },
+    "kevalin/mermaid.nvim",
     ft = { "markdown", "mermaid" },
+    opts = {
+      theme = "dark",
+    },
+  },
+  {
+    "3rd/diagram.nvim",
+    dependencies = {
+      {
+        "3rd/image.nvim",
+        opts = {},
+      },
+    },
+    ft = { "markdown", "mermaid" },
+    enabled = function()
+      -- Only enable when Kitty graphics protocol can work:
+      -- not in Zellij/tmux, and not in a GUI like Neovide
+      return not vim.g.neovide
+        and vim.env.ZELLIJ == nil
+        and vim.env.TMUX == nil
+    end,
     opts = {
       renderer_options = {
         mermaid = {
           background = "transparent",
           theme = "dark",
+          cli_args = { "-p", vim.fn.stdpath("config") .. "/puppeteer-config.json" },
         },
       },
     },
@@ -140,7 +152,7 @@ return {
       options = {
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(count, level, _, _)
-          local icon = level:match "error" and " " or " "
+          local icon = level:match "error" and " " or " "
           return " " .. icon .. count
         end,
         mode = "tabs",

@@ -54,24 +54,25 @@ return {
       if opts.adapters then
         local new_adapters = {}
         for _, adapter in ipairs(opts.adapters) do
-          if type(adapter) ~= "table" or adapter.name ~= "neotest-golang" then
-            table.insert(new_adapters, adapter)
-          end
+          if type(adapter) ~= "table" or adapter.name ~= "neotest-golang" then table.insert(new_adapters, adapter) end
         end
         opts.adapters = new_adapters
       else
         opts.adapters = {}
       end
-      table.insert(opts.adapters, require("neotest-golang")({
-        go_test_args = function()
-          return {
-            "-v",
-            "-race",
-            "-count=1",
-            "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
-          }
-        end,
-      }))
+      table.insert(
+        opts.adapters,
+        require "neotest-golang" {
+          go_test_args = function()
+            return {
+              "-v",
+              "-race",
+              "-count=1",
+              "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+            }
+          end,
+        }
+      )
     end,
   },
 
@@ -93,6 +94,10 @@ return {
     "cappyzawa/starlark.vim",
   },
   {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = { "lewis6991/async.nvim" },
+  },
+  {
     "yetone/avante.nvim",
     opts = {
       rag_service = {
@@ -107,7 +112,7 @@ return {
             NODE_NO_WARNINGS = "1",
             CLAUDE_CODE_OAUTH_TOKEN = os.getenv "CLAUDE_CODE_OAUTH_TOKEN",
             ANTHROPIC_API_KEY = os.getenv "ANTHROPIC_API_KEY",
-            ACP_PERMISSION_MODE = "default",
+            ACP_PERMISSION_MODE = "auto",
           },
         },
       },
@@ -132,16 +137,14 @@ return {
     enabled = function()
       -- Only enable when Kitty graphics protocol can work:
       -- not in Zellij/tmux, and not in a GUI like Neovide
-      return not vim.g.neovide
-        and vim.env.ZELLIJ == nil
-        and vim.env.TMUX == nil
+      return not vim.g.neovide and vim.env.ZELLIJ == nil and vim.env.TMUX == nil
     end,
     opts = {
       renderer_options = {
         mermaid = {
           background = "transparent",
           theme = "dark",
-          cli_args = { "-p", vim.fn.stdpath("config") .. "/puppeteer-config.json" },
+          cli_args = { "-p", vim.fn.stdpath "config" .. "/puppeteer-config.json" },
         },
       },
     },

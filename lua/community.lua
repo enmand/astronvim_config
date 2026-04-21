@@ -27,6 +27,7 @@ return {
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
   { import = "astrocommunity.recipes.vscode" },
   { import = "astrocommunity.completion.copilot-lua-cmp" },
+  { import = "astrocommunity.ai.avante-nvim" },
   { import = "astrocommunity.git.octo-nvim" },
   { import = "astrocommunity.git.git-blame-nvim" },
   { import = "astrocommunity.git.neogit" },

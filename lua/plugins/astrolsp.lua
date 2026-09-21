@@ -26,46 +26,10 @@ return {
       "tilt_ls",
     },
     -- customize language server configuration passed to `vim.lsp.config`
-    config = {
-      -- rust-analyzer tuning. These settings flow into rustaceanvim via the
-      -- astrocommunity rust pack (it reads vim.lsp.config.rust_analyzer.settings)
-      -- and deep-merge with the pack's defaults (which set check.command = clippy).
-      rust_analyzer = {
-        settings = {
-          ["rust-analyzer"] = {
-            -- Make the on-save check far cheaper. rust-analyzer has no real
-            -- "debounce" knob (check only runs on save, never per-keystroke),
-            -- so we shrink the work each save does instead:
-            check = {
-              workspace = true, -- only check the crate you're in, not every workspace member
-              allTargets = true, -- include tests/benches/examples so test code gets diagnostics
-            },
-            -- Keep inlay hints on, but drop the chattiest/most expensive categories.
-            inlayHints = {
-              parameterHints = { enable = false },
-              chainingHints = { enable = false },
-              closureReturnTypeHints = { enable = "never" },
-              bindingModeHints = { enable = false },
-              closingBraceHints = { enable = false },
-            },
-            -- Keep codelens, but only the cheap run/debug lenses. The reference
-            -- and implementation lenses are the expensive ones.
-            lens = {
-              enable = true,
-              run = { enable = true },
-              debug = { enable = true },
-              implementations = { enable = false },
-              references = {
-                adt = { enable = false },
-                enumVariant = { enable = false },
-                method = { enable = false },
-                trait = { enable = false },
-              },
-            },
-          },
-        },
-      },
-    },
+    -- NOTE: rust-analyzer is configured in lua/plugins/rust.lua. Settings put in
+    -- `config.rust_analyzer` here are dropped: astrocommunity's rust pack reads
+    -- them via `astrolsp.lsp_opts`, which this AstroNvim install doesn't provide.
+    config = {},
     handlers = {},
     autocmds = {
       lsp_codelens_refresh = {

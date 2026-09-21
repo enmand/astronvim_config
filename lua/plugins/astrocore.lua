@@ -37,6 +37,8 @@ return {
         number = true,
         spell = false,
         signcolumn = "yes",
+        updatetime = 250, -- ms of idle before CursorHold fires (default 4000); makes LSP hover/highlight feel responsive
+
         wrap = false,
         tabstop = 4,
         shiftwidth = 4,

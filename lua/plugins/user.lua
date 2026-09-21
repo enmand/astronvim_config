@@ -27,23 +27,21 @@ return {
     },
   },
 
+  -- Extend community nvim-coverage opts (merged, not shadowing)
   {
     "andythigpen/nvim-coverage",
-    config = function()
-      require("coverage").setup {
-        auto_reload = true,
-        lang = {
-          go = {
-            coverage_file = vim.fn.getcwd() .. "/coverage.out",
-          },
-          rust = {
-            coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
-            project_files_only = true,
-            project_files = { "crates/*", "src/*", "tests/*" },
-          },
+    opts = {
+      lang = {
+        go = {
+          coverage_file = vim.fn.getcwd() .. "/coverage.out",
         },
-      }
-    end,
+        rust = {
+          coverage_command = "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
+          project_files_only = true,
+          project_files = { "crates/*", "src/*", "tests/*" },
+        },
+      },
+    },
   },
 
   -- Configure neotest-golang with coverage options
@@ -91,28 +89,49 @@ return {
     },
   },
   {
-    "cappyzawa/starlark.vim",
-  },
-  {
-    "ThePrimeagen/refactoring.nvim",
-    dependencies = { "lewis6991/async.nvim" },
-  },
-  {
     "yetone/avante.nvim",
+    -- these ACP commands are not in the astrocommunity lazy loading list
+    cmd = { "AvanteACPModels", "AvanteACPModes" },
     opts = {
       rag_service = {
         enabled = false,
       },
       provider = "claude-code",
       acp_providers = {
+        -- @zed-industries/claude-agent-acp: only PATH is inherited from Neovim, so HOME must
+        -- be passed explicitly or auth lookup fails with "Authentication required".
+        -- Do NOT set CLAUDE_CODE_EXECUTABLE: the agent passes it to the Agent SDK as
+        -- `pathToClaudeCodeExecutable` while spawning it with node, and our `claude` is a
+        -- native binary, not a cli.js. It bundles its own claude-code CLI, so leave it alone.
         ["claude-code"] = {
-          command = "npx",
-          args = { "@zed-industries/claude-code-acp" },
+          command = "claude-agent-acp",
+          args = {},
           env = {
             NODE_NO_WARNINGS = "1",
-            CLAUDE_CODE_OAUTH_TOKEN = os.getenv "CLAUDE_CODE_OAUTH_TOKEN",
-            ANTHROPIC_API_KEY = os.getenv "ANTHROPIC_API_KEY",
-            ACP_PERMISSION_MODE = "auto",
+            HOME = os.getenv "HOME",
+            PATH = os.getenv "PATH",
+          },
+        },
+        codex = {
+          command = "codex",
+          args = {},
+          env = {
+            NODE_NO_WARNINGS = "1",
+            HOME = os.getenv "HOME",
+            PATH = os.getenv "PATH",
+          },
+        },
+      },
+    },
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>Am"] = { "<Cmd>AvanteACPModels<CR>", desc = "Select ACP model" },
+              ["<Leader>AM"] = { "<Cmd>AvanteACPModes<CR>", desc = "Select ACP mode" },
+            },
           },
         },
       },

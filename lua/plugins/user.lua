@@ -183,4 +183,81 @@ return {
       },
     },
   },
+  {
+    -- AI sidekick: Copilot NES + terminal panel for Claude/Codex/opencode CLIs.
+    -- Lowercase `<Leader>a` prefix avoids clashing with Avante's `<Leader>A`.
+    "folke/sidekick.nvim",
+    opts = {
+      cli = {
+        mux = {
+          backend = "zellij",
+          enabled = true,
+        },
+      },
+    },
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = function(_, opts)
+          local maps = assert(opts.mappings)
+          local prefix = "<Leader>a"
+          maps.n[prefix] = { desc = "Sidekick" }
+          maps.n[prefix .. "a"] = { function() require("sidekick.cli").toggle() end, desc = "Toggle CLI" }
+          maps.n[prefix .. "s"] = { function() require("sidekick.cli").select() end, desc = "Select CLI" }
+          maps.n[prefix .. "d"] = { function() require("sidekick.cli").close() end, desc = "Detach CLI session" }
+          maps.n[prefix .. "t"] = {
+            function() require("sidekick.cli").send { msg = "{this}" } end,
+            desc = "Send this to CLI",
+          }
+          maps.n[prefix .. "f"] = {
+            function() require("sidekick.cli").send { msg = "{file}" } end,
+            desc = "Send file to CLI",
+          }
+          maps.n[prefix .. "p"] = { function() require("sidekick.cli").prompt() end, desc = "Select prompt" }
+          maps.n[prefix .. "c"] = {
+            function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
+            desc = "Toggle Claude",
+          }
+          maps.n[prefix .. "n"] = { desc = "NES" }
+          maps.n[prefix .. "nt"] = { function() require("sidekick.nes").toggle() end, desc = "Toggle NES" }
+          maps.n[prefix .. "nu"] = { function() require("sidekick.nes").update() end, desc = "Update suggestions" }
+          maps.x[prefix] = { desc = "Sidekick" }
+          maps.x[prefix .. "v"] = {
+            function() require("sidekick.cli").send { msg = "{selection}" } end,
+            desc = "Send selection to CLI",
+          }
+          maps.x[prefix .. "p"] = { function() require("sidekick.cli").prompt() end, desc = "Select prompt" }
+          for _, mode in ipairs { "n", "x", "i", "t" } do
+            maps[mode] = maps[mode] or {}
+            maps[mode]["<C-.>"] = { function() require("sidekick.cli").toggle() end, desc = "Sidekick toggle" }
+          end
+        end,
+      },
+      {
+        -- Insert sidekick NES into blink's <Tab> chain (after snippets, before fallback)
+        "saghen/blink.cmp",
+        optional = true,
+        opts = function(_, opts)
+          local tab = assert(opts.keymap)["<Tab>"]
+          table.insert(tab, #tab, function() return require("sidekick").nes_jump_or_apply() end)
+        end,
+      },
+      {
+        -- Send snacks picker selections to the CLI with <A-a>
+        "folke/snacks.nvim",
+        optional = true,
+        opts = function(_, opts)
+          local actions = vim.tbl_get(opts, "picker", "actions") or {}
+          actions.sidekick_send = function(...) return require("sidekick.cli.picker.snacks").send(...) end
+          opts.picker = opts.picker or {}
+          opts.picker.actions = actions
+          local keys = vim.tbl_get(opts, "picker", "win", "input", "keys") or {}
+          keys["<a-a>"] = { "sidekick_send", mode = { "n", "i" } }
+          opts.picker.win = opts.picker.win or {}
+          opts.picker.win.input = opts.picker.win.input or {}
+          opts.picker.win.input.keys = keys
+        end,
+      },
+    },
+  },
 }

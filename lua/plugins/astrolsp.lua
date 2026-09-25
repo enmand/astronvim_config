@@ -29,7 +29,16 @@ return {
     -- NOTE: rust-analyzer is configured in lua/plugins/rust.lua. Settings put in
     -- `config.rust_analyzer` here are dropped: astrocommunity's rust pack reads
     -- them via `astrolsp.lsp_opts`, which this AstroNvim install doesn't provide.
-    config = {},
+    config = {
+      basedpyright = {
+        -- Use the project's in-project Poetry venv; fall back to PATH python.
+        before_init = function(_, c)
+          local venv_py = c.root_dir and c.root_dir .. "/.venv/bin/python"
+          local python = (venv_py and vim.fn.executable(venv_py) == 1) and venv_py or vim.fn.exepath "python"
+          c.settings = vim.tbl_deep_extend("force", c.settings or {}, { python = { pythonPath = python } })
+        end,
+      },
+    },
     handlers = {},
     autocmds = {
       lsp_codelens_refresh = {

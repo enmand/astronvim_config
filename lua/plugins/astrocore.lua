@@ -71,6 +71,7 @@ return {
         ["<D-]>"] = { "<cmd>tabnext<cr>", desc = "Next tab" },
         ["<D-[>"] = { "<cmd>tabprevious<cr>", desc = "Previous tab" },
         ["<C-x>"] = { "<cmd>bd<CR>" },
+        ["<LocalLeader>qc"] = { "<cmd>cclose<cr>", desc = "Close quickfix list" },
 
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },

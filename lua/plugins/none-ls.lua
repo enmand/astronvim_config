@@ -1,24 +1,22 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+local function project_root(params) return vim.fs.root(params.bufname, "pyproject.toml") end
 
--- Customize None-ls sources
+local function venv_bin(name)
+  return function(params)
+    local root = project_root(params)
+    local exe = root and root .. "/.venv/bin/" .. name
+    return exe and vim.fn.executable(exe) == 1 and exe or nil
+  end
+end
 
 ---@type LazySpec
 return {
   "nvimtools/none-ls.nvim",
+  dependencies = { "nvimtools/none-ls-extras.nvim" },
   opts = function(_, opts)
-    -- opts variable is the default configuration table for the setup function call
-    -- local null_ls = require "null-ls"
-
-    -- Check supported formatters and linters
-    -- https://github.com/nvimtools/none-ls.nvim/tree/main/lua/null-ls/builtins/formatting
-    -- https://github.com/nvimtools/none-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
-
-    -- Only insert new sources, do not replace the existing ones
-    -- (If you wish to replace, use `opts.sources = {}` instead of the `list_insert_unique` function)
+    local null_ls = require "null-ls"
     opts.sources = require("astrocore").list_insert_unique(opts.sources, {
-      -- Set a formatter
-      -- null_ls.builtins.formatting.stylua,
-      -- null_ls.builtins.formatting.prettier,
+      null_ls.builtins.diagnostics.mypy.with { dynamic_command = venv_bin "mypy", cwd = project_root },
+      require("none-ls.diagnostics.flake8").with { dynamic_command = venv_bin "flake8", cwd = project_root },
     })
   end,
 }

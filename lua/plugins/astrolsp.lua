@@ -18,7 +18,7 @@ return {
         allow_filetypes = {},
         ignore_filetypes = {},
       },
-      disabled = {},
+      disabled = { "vtsls" },
       timeout_ms = 1000,
     },
     -- enable servers that you already have installed without mason

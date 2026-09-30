@@ -30,6 +30,23 @@ return {
     -- `config.rust_analyzer` here are dropped: astrocommunity's rust pack reads
     -- them via `astrolsp.lsp_opts`, which this AstroNvim install doesn't provide.
     config = {
+      -- rust-analyzer-style auto-import: offer unimported symbols (incl. every
+      -- package.json dep, not just already-imported ones) in completion.
+      vtsls = {
+        settings = {
+          typescript = {
+            suggest = { autoImports = true, includeCompletionsForImportStatements = true },
+            preferences = { includePackageJsonAutoImports = "on", importModuleSpecifier = "shortest" },
+          },
+          javascript = {
+            suggest = { autoImports = true, includeCompletionsForImportStatements = true },
+            preferences = { includePackageJsonAutoImports = "on", importModuleSpecifier = "shortest" },
+          },
+          vtsls = {
+            experimental = { completion = { enableServerSideFuzzyMatch = true, entriesLimit = 200 } },
+          },
+        },
+      },
       basedpyright = {
         -- Use the project's in-project Poetry venv; fall back to PATH python.
         before_init = function(_, c)

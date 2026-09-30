@@ -92,6 +92,8 @@ return {
           function() require("neo-tree.command").execute { toggle = true } end,
           desc = "Toggle Neo-tree",
         },
+        -- Neovide sends Cmd+Shift+E as <D-E> rather than <S-D-e>
+        ["<D-E>"] = { function() require("neo-tree.command").execute { toggle = true } end, desc = "Toggle Neo-tree" },
         ["<C-n>"] = { function() require("neo-tree.command").execute { toggle = true } end, desc = "Toggle Neo-tree" },
         ["<C-p>"] = { function() require("snacks.picker").files() end, desc = "Find files" },
         ["<C-a>"] = { function() require("snacks.picker").grep() end, desc = "Find words" },

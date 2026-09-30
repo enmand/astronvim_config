@@ -155,8 +155,8 @@ return {
     ft = { "markdown", "mermaid" },
     enabled = function()
       -- Only enable when Kitty graphics protocol can work:
-      -- not in Zellij/tmux, and not in a GUI like Neovide
-      return not vim.g.neovide and vim.env.ZELLIJ == nil and vim.env.TMUX == nil
+      -- not in Zellij/tmux, and not in a GUI like Neovide/VimR
+      return not vim.g.neovide and not vim.g.gui_vimr and vim.env.ZELLIJ == nil and vim.env.TMUX == nil
     end,
     opts = {
       renderer_options = {
@@ -168,8 +168,16 @@ return {
       },
     },
   },
+  -- VimR redraws are slow; drop the per-keystroke winbar/bufferline there.
+  {
+    "rebelot/heirline.nvim",
+    opts = function(_, opts)
+      if vim.g.gui_vimr then opts.winbar = nil end
+    end,
+  },
   {
     "akinsho/bufferline.nvim",
+    cond = not vim.g.gui_vimr,
     opts = {
       options = {
         diagnostics = "nvim_lsp",

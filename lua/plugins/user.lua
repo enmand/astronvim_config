@@ -92,6 +92,10 @@ return {
     "yetone/avante.nvim",
     -- these ACP commands are not in the astrocommunity lazy loading list
     cmd = { "AvanteACPModels", "AvanteACPModes" },
+    dependencies = {
+      "ColinKennedy/mega.cmdparse",
+      "ColinKennedy/mega.logging",
+    },
     opts = {
       rag_service = {
         enabled = false,

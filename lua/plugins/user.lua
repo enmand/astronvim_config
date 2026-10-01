@@ -177,7 +177,6 @@ return {
   },
   {
     "akinsho/bufferline.nvim",
-    cond = not vim.g.gui_vimr,
     opts = {
       options = {
         diagnostics = "nvim_lsp",

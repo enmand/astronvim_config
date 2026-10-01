@@ -229,6 +229,12 @@ return {
           maps.n[prefix .. "n"] = { desc = "NES" }
           maps.n[prefix .. "nt"] = { function() require("sidekick.nes").toggle() end, desc = "Toggle NES" }
           maps.n[prefix .. "nu"] = { function() require("sidekick.nes").update() end, desc = "Update suggestions" }
+          -- Jump to / apply the next NES suggestion; otherwise normal <Tab> (jumplist forward).
+          maps.n["<Tab>"] = {
+            function() return require("sidekick").nes_jump_or_apply() and "" or "<Tab>" end,
+            expr = true,
+            desc = "Goto/Apply Next Edit Suggestion",
+          }
           maps.x[prefix] = { desc = "Sidekick" }
           maps.x[prefix .. "v"] = {
             function() require("sidekick.cli").send { msg = "{selection}" } end,

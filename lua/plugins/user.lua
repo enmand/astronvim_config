@@ -174,12 +174,6 @@ return {
   },
   -- VimR redraws are slow; drop the per-keystroke winbar/bufferline there.
   {
-    "rebelot/heirline.nvim",
-    opts = function(_, opts)
-      if vim.g.gui_vimr then opts.winbar = nil end
-    end,
-  },
-  {
     "akinsho/bufferline.nvim",
     opts = {
       options = {

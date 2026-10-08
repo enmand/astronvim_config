@@ -6,6 +6,7 @@ return {
   -- libgit2 symlinked by nix-darwin (home/enmand/default.nix)
   { "SuperBo/fugit2.nvim", opts = {
       libgit2_path = vim.fn.expand "~/.local/lib/libgit2.dylib",
+      gpgme_path = vim.fn.expand "~/.local/lib/libgpgme.dylib",
       external_diffview = true,
       width = "70%", -- status window
       max_width = "95%", -- when patch view is open

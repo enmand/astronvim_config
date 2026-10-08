@@ -3,6 +3,9 @@ return {
 
   { "ray-x/lsp_signature.nvim", enabled = false },
 
+  -- libgit2 symlinked by nix-darwin (home/enmand/default.nix)
+  { "SuperBo/fugit2.nvim", opts = { libgit2_path = vim.fn.expand "~/.local/lib/libgit2.dylib" } },
+
   -- customize dashboard options
   {
     "folke/snacks.nvim",

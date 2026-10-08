@@ -4,7 +4,14 @@ return {
   { "ray-x/lsp_signature.nvim", enabled = false },
 
   -- libgit2 symlinked by nix-darwin (home/enmand/default.nix)
-  { "SuperBo/fugit2.nvim", opts = { libgit2_path = vim.fn.expand "~/.local/lib/libgit2.dylib" } },
+  { "SuperBo/fugit2.nvim", opts = {
+      libgit2_path = vim.fn.expand "~/.local/lib/libgit2.dylib",
+      external_diffview = true,
+      width = "70%", -- status window
+      max_width = "95%", -- when patch view is open
+      height = "90%", -- builtin diff view calls undefined GitDiff:_index_add_reset_handler
+    },
+  },
 
   -- customize dashboard options
   {

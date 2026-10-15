@@ -40,7 +40,6 @@ return {
   { import = "astrocommunity.test.nvim-coverage" },
   { import = "astrocommunity.terminal-integration.vim-tmux-yank" },
   { import = "astrocommunity.editing-support.ultimate-autopair-nvim" },
-  { import = "astrocommunity.editing-support.mcphub-nvim" },
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.bars-and-lines.bufferline-nvim" },

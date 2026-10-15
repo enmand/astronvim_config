@@ -94,6 +94,12 @@ return {
     end,
   },
   {
+    "kopecmaciej/vi-mongo.nvim",
+    cmd = { "ViMongo" },
+    keys = { { "<Leader>tm", "<cmd>ViMongo<cr>", desc = "ViMongo" } },
+    opts = {},
+  },
+  {
     "akinsho/toggleterm.nvim",
     opts = {
       direction = "float",

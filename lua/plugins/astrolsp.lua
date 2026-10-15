@@ -73,6 +73,38 @@ return {
     },
     mappings = {
       n = {
+        -- Hover with the definition's location (file:line) prepended, for any server.
+        K = {
+          function()
+            local params = function(client) return vim.lsp.util.make_position_params(0, client.offset_encoding) end
+            vim.lsp.buf_request_all(0, "textDocument/hover", params, function(hovers)
+              vim.lsp.buf_request_all(0, "textDocument/definition", params, function(defs)
+                local lines = {}
+                for _, r in pairs(defs) do
+                  local loc = r.result and (vim.islist(r.result) and r.result[1] or r.result)
+                  if loc then
+                    local range = loc.targetSelectionRange or loc.range
+                    local file = vim.fn.fnamemodify(vim.uri_to_fname(loc.targetUri or loc.uri), ":~:.")
+                    lines = { ("`%s:%d`"):format(file, range.start.line + 1), "---" }
+                    break
+                  end
+                end
+                local has_hover = false
+                for _, r in pairs(hovers) do
+                  if r.result and r.result.contents then
+                    if has_hover then table.insert(lines, "---") end
+                    vim.list_extend(lines, vim.lsp.util.convert_input_to_markdown_lines(r.result.contents))
+                    has_hover = true
+                  end
+                end
+                if not has_hover then return vim.notify("No information available", vim.log.levels.INFO) end
+                vim.lsp.util.open_floating_preview(lines, "markdown", { focus_id = "textDocument/hover" })
+              end)
+            end)
+          end,
+          desc = "Hover symbol details (with definition location)",
+          cond = "textDocument/hover",
+        },
         gD = {
           function() vim.lsp.buf.declaration() end,
           desc = "Declaration of current symbol",

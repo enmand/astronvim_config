@@ -2,6 +2,7 @@
 return {
 
   { "ray-x/lsp_signature.nvim", enabled = false },
+  { "sindrets/diffview.nvim", enabled = false }, -- replaced by diffview-plus.nvim (fork, same `diffview` module)
 
   -- libgit2/gpgme symlinked by nix-darwin (home/enmand/default.nix)
   { "SuperBo/fugit2.nvim", opts = {

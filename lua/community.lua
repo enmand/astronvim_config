@@ -36,6 +36,7 @@ return {
   { import = "astrocommunity.git.octo-nvim" },
   { import = "astrocommunity.git.git-blame-nvim" },
   { import = "astrocommunity.git.fugit2-nvim" },
+  { import = "astrocommunity.git.diffview-plus-nvim" },
   { import = "astrocommunity.test.neotest" },
   { import = "astrocommunity.test.nvim-coverage" },
   { import = "astrocommunity.terminal-integration.vim-tmux-yank" },
